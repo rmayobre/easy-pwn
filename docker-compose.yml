@@ -1,0 +1,80 @@
+version: "3.9"
+
+volumes:
+  pihole-volume:
+    name: pihole
+  dnsmasq.d-volume:
+    name: pihole-dnsmasq.d
+
+networks:
+  private-network:
+    name: pwn-network
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.2.0.0/24
+
+services:
+  unbound:
+    image: "mvance/unbound:latest"
+    container_name: unbound
+    restart: unless-stopped
+    hostname: "unbound"
+    volumes:
+      - "./unbound:/opt/unbound/etc/unbound/"
+    networks:
+      private-network:
+        ipv4_address: 10.2.0.200
+
+  pihole:
+    depends_on: [unbound]
+    container_name: pihole
+    image: pihole/pihole:latest
+    restart: unless-stopped
+    hostname: pihole
+    dns:
+      - 127.0.0.1
+      - 10.2.0.200 # points to Unbound
+    environment:
+      TZ: "America/New_York" # Update to your timezone!
+      WEBPASSWORD: "" # Create a password, otherwise, no password required to access pihole.
+      ServerIP: 10.1.0.100
+      PIHOLE_DNS_: 10.2.0.200;10.2.0.200 # points to Unbound
+    volumes:
+      - pihole-volume/:/etc/pihole/
+      - dnsmasq.d-volume/:/etc/dnsmasq.d/
+    cap_add:
+      - NET_ADMIN
+    networks:
+      private-network:
+        ipv4_address: 10.2.0.100
+
+  wireguard:
+    depends_on: [unbound, pihole]
+    image: weejewel/wg-easy
+    container_name: wg-easy
+    restart: unless-stopped
+    environment:
+      - WG_HOST=127.0.0.1
+      - PASSWORD=admin # Update this - comment out for no password requirements.
+      - WG_PORT=51000 # Make sure this matches the host's port for 51820/udp.
+      - WG_DEFAULT_ADDRESS=10.6.0.x # Subnet for all wireguard connections.
+      - WG_DEFAULT_DNS=10.2.0.100 # points to Pihole
+
+      # Leave this alone, unless you understand wireguard networking.
+      # To tunnel all network, replace with "0.0.0.0/0, ::/0".
+      - WG_ALLOWED_IPS=10.6.0.0/24, 10.2.0.0/24
+    volumes:
+      - .:/etc/wireguard
+    ports:
+      - "51000:51820/udp" # Make sure if you change 51000 to update the WG_PORT env.
+      - "51821:51821/tcp" # Do not change this.
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv4.conf.all.src_valid_mark=1
+    networks:
+      private-network:
+        ipv4_address: 10.2.0.3
