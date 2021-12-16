@@ -5,6 +5,8 @@ volumes:
     name: pihole
   dnsmasq.d-volume:
     name: pihole-dnsmasq.d
+  wireguard-volume:
+    name: wireguard
   portainer-data-volume:
     name: portainer-data
 
@@ -71,7 +73,7 @@ services:
       # To tunnel all network, replace with "0.0.0.0/0, ::/0".
       - WG_ALLOWED_IPS=10.6.0.0/24, 10.2.0.0/24
     volumes:
-      - /etc/wireguard
+      - wireguard-volume/:/etc/wireguard
     ports:
       - 51000:51820/udp # Make sure if you change 51000 to update the WG_PORT env.
       - 127.0.0.1:51821:51821/tcp # Do not change this.
