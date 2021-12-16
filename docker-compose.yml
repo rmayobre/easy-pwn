@@ -20,7 +20,7 @@ services:
   # Unbound DNS
   unbound:
     image: "mvance/unbound:latest"
-    container_name: unbound
+    container_name: unbound-test
     restart: unless-stopped
     hostname: "unbound"
     volumes:
@@ -32,7 +32,7 @@ services:
   # Pro tip: Use PiHole for local DNS Records to access your private webpages with domain names..
   pihole:
     depends_on: [unbound]
-    container_name: pihole
+    container_name: pihole-test
     image: pihole/pihole:latest
     restart: unless-stopped
     hostname: pihole
@@ -56,7 +56,7 @@ services:
   wireguard:
     depends_on: [unbound, pihole]
     image: weejewel/wg-easy
-    container_name: wg-easy
+    container_name: wireguard-ui
     restart: unless-stopped
     environment:
       - WG_HOST=127.0.0.1
@@ -85,7 +85,7 @@ services:
   # Portainer Agent Service
   agent:
     image: portainer/agent
-    container_name: portainer-agent
+    container_name: portainer-agent-test
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -96,7 +96,7 @@ services:
   #Portainer UI
   portainer:
     image: portainer/portainer-ce
-    container_name: portainer-ui
+    container_name: portainer-ui-test
     restart: unless-stopped
     volumes:
       - portainer-data-volume:/data
