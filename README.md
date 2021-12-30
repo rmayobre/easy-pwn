@@ -1,5 +1,5 @@
 # Easy Private Wireguard Network (easy pwn)
-A private wireguard network stack (`PWN`) with Unbound DNS, PiHold ad blocking, and a Web UI for managing Wireguard peer connections.
+A private wireguard network stack (`PWN`) with Unbound DNS, PiHold ad blocking, and a Web UI for managing Wireguard peer connections. With easy-pwn you can hide all self hosted services behind a `Wireguard` VPN and use `PiHole` for local DNS resolving. Clients connected to the Wireguard VPN will also gain the benefit of ad blocking.
 
 ## Addresses
 * 10.2.0.0/24 - IP Address range for Docker Containers in PWN network.
@@ -74,3 +74,6 @@ Once you are connected to the wireguard server, you can access the Wireguard UI 
 
 ## Portainer Configuration
 Go to `Portainer` (http://10.2.0.4:9000) and create a profile. After creating a profile, connect to the `Protainer Agent`. Connect to the the following endpoint: `10.2.0.5:9001`. Once connected, Portainer is ready to use.
+
+## Additional Configurations
+You can add an Nginx reverse proxy to your private network by adding [this stack](https://github.com/rmayobre/scripted-selfhost/tree/main/docker/private-proxy-manager-stack) to your `pwn-network`. Update your `PiHole` local DNS records to point to the 10.2.0.0/24 ip address of your Nginx container. Then add the proxy to the nginx database (optionally you can add an SSL cert).
