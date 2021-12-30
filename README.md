@@ -9,6 +9,23 @@ A private wireguard network stack (`PWN`) with Unbound DNS, PiHold ad blocking, 
 * http://10.2.0.4:9000 - Portainer Web UI
 * 10.2.0.5:9001 - Portainer Agent
 
+## References
+- [portainer](https://www.portainer.io/)
+
+Wireguard VPN
+- [wg-easy](https://github.com/WeeJeWel/wg-easy/) (Wireguard UI)
+- [Wireguard](https://www.wireguard.com/)
+
+Unbound DNS
+- [Unbound](https://nlnetlabs.nl/projects/unbound/about/)
+- [Unbound conf docs](https://www.nlnetlabs.nl/documentation/unbound/unbound.conf/)
+- [Unbound Docker](https://github.com/MatthewVance/unbound-docker)
+
+PiHole
+- [PiHole Website](https://pi-hole.net/)
+- [PiHole GitHub](https://github.com/pi-hole/docker-pi-hole)
+
+
 ## Requirements
 You must run Linux with a kernel that has support for Wireguard. Most Linux distros now come with Wireguard by default, however, some do not. CentOS 8 distros, for example, do not come with Wireguard installed. If you are running a CentOS 8 distro (Rocky Linux 8, AlmaLinux, CentOS 8, etc.), try running this [script](https://github.com/rmayobre/scripted-selfhost/tree/main/scripts/wireguard-centos8) to install the Wireguard Kernel modules.
 
