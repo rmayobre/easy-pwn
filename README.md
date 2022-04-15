@@ -89,7 +89,9 @@ Create a client profile for your computer to use and connect to the Wireguard se
 
 Once you are connected to the wireguard server, you can access the Wireguard UI (wg-easy) as well as portainer and Pi hole via Wireguard connection. See `Addresses` at the top for the links.
 
-## Portainer Configuration
+## Portainer Configuration (Using docker-compose-portainer)
+If you used the `docker-compose-portainer.yml` stack, the following instructions will help with accessing the portainer webpage. Follow these instructions after you have configured the your wireguard client connection to the pwn network.
+
 Go to `Portainer` (http://10.2.0.4:9000) and create a profile. After creating a profile, connect to the `Protainer Agent`. Connect to the the following endpoint: `10.2.0.5:9001`. Once connected, Portainer is ready to use.
 
 ## Additional Configurations
