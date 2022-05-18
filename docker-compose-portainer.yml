@@ -1,14 +1,14 @@
 version: "3.9"
 
 volumes:
+  portainer-data-volume:
+    name: portainer-data
   pihole-volume:
     name: pihole
   dnsmasq.d-volume:
     name: pihole-dnsmasq.d
   wireguard-volume:
     name: wireguard
-  portainer-data-volume:
-    name: portainer-data
 
 networks:
   private-network:
@@ -19,6 +19,7 @@ networks:
         - subnet: 10.2.0.0/24
 
 services:
+
   # Unbound DNS
   unbound:
     image: "mvance/unbound:latest"
@@ -30,6 +31,7 @@ services:
     networks:
       private-network:
         ipv4_address: 10.2.0.200
+
   # PiHold Ad Blocker
   # Pro tip: Use PiHole for local DNS Records to access your private webpages with domain names..
   pihole:
@@ -54,6 +56,7 @@ services:
     networks:
       private-network:
         ipv4_address: 10.2.0.100
+
   # easy-wg UI
   wireguard:
     depends_on: [unbound, pihole]
@@ -84,19 +87,24 @@ services:
       - net.ipv4.ip_forward=1
       - net.ipv4.conf.all.src_valid_mark=1
     networks:
+      portainer-network:
       private-network:
         ipv4_address: 10.2.0.3
-  #Portainer UI
+
+  # Portainer UI
+  # Portainer UI will share the network of Wireguard.
+  # Access Portainer UI via 10.2.0.3:9000
   portainer:
     image: portainer/portainer-ce
     container_name: portainer-ui
+    network_mode: service:wireguard
+    depends_on: [wireguard]
     restart: unless-stopped
     volumes:
       - portainer-data-volume:/data
-    networks:
-      private-network:
-        ipv4_address: 10.2.0.4 # Use this address to access webpage.
+      
   # Portainer Agent Service
+  # Connect to Portainer Agent via 10.2.0.5:9001
   agent:
     image: portainer/agent
     container_name: portainer-agent
