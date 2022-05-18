@@ -6,7 +6,7 @@ A private wireguard network stack (`PWN`) with Unbound DNS, PiHold ad blocking, 
 * 10.6.0.0/24 - IP Address range for peer connections to Wireguard server.
 * http://10.2.0.100/admin - Pi Hole Web UI
 * http://10.2.0.3:51821 - Easy Wireguard Web UI
-* http://10.2.0.4:9000 - Portainer Web UI
+* http://10.2.0.3:9000 - Portainer Web UI
 * 10.2.0.5:9001 - Portainer Agent
 
 ## References
@@ -92,7 +92,7 @@ Once you are connected to the wireguard server, you can access the Wireguard UI 
 ## Portainer Configuration (Using docker-compose-portainer)
 If you used the `docker-compose-portainer.yml` stack, the following instructions will help with accessing the portainer webpage. Follow these instructions after you have configured the your wireguard client connection to the pwn network.
 
-Go to `Portainer` (http://10.2.0.4:9000) and create a profile. After creating a profile, connect to the `Protainer Agent`. Connect to the the following endpoint: `10.2.0.5:9001`. Once connected, Portainer is ready to use.
+Go to `Portainer` (http://10.2.0.3:9000) and create a profile. After creating a profile, connect to the `Protainer Agent`. Connect to the the following endpoint: `10.2.0.5:9001`. Once connected, Portainer is ready to use.
 
 ## Additional Configurations
 You can add an Nginx reverse proxy to your private network by adding [this stack](https://github.com/rmayobre/scripted-selfhost/tree/main/docker/private-proxy-manager-stack) to your `pwn-network`. Update your `PiHole` local DNS records to point to the 10.2.0.0/24 ip address of your Nginx container. Then add the proxy to the nginx database (optionally you can add an SSL cert).
